@@ -10,7 +10,7 @@ server {
     listen [::]:443 ssl http2;
     server_name movel.id www.movel.id;
 
-    # SSL configuration
+   # SSL configuration
    # ssl_certificate /path/to/ssl/certificate;
    # ssl_certificate_key /path/to/ssl/certificate/key;
    # ssl_certificate /etc/letsencrypt/live/movel.id/fullchain.pem;
@@ -33,10 +33,23 @@ server {
         try_files $uri $uri/ /index.php?$query_string;
     }
 
+    location ^~ /urlpath {
+    auth_basic "Admin Login";
+    auth_basic_user_file /etc/nginx/pma_pass;
+    try_files $uri $uri/ =404;
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+	}
+    }
+
     # PHP-FPM configuration
     location ~ \.php$ {
         include snippets/fastcgi-php.conf;
-        fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+        include fastcgi_params;
+	fastcgi_pass unix:/run/php/php8.2-fpm.sock;
+	fastcgi_param DOCUMENT_ROOT $realpath_root;
+	fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
     }
 
     # Static file caching
