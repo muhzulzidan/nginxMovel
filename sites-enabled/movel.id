@@ -21,7 +21,7 @@ server {
     #include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; 
     # Laravel app root directory
-    root /var/www/html/movel/public;
+    root /var/www/html/admin-dashboard/public;
 
     # Access and error logs
     access_log /var/log/nginx/movel.id.access.log;
